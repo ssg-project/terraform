@@ -2,3 +2,4 @@
 .terraform/
 terraform.tfstae
 terraform.tfstate.backup
+*.tgz
