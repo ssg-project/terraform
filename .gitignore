@@ -1,5 +1,5 @@
 .terraform.lock.hcl
 .terraform/
-terraform.tfstae
+terraform.tfstate
 terraform.tfstate.backup
 *.tgz
