@@ -7,3 +7,5 @@
 # kubectl scale deployment inflate --replicas=3
 
 # kubectl get node
+
+# kubectl delete -f example.yaml

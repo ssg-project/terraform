@@ -17,11 +17,11 @@ locals {
   vpc_cidr = "10.0.0.0/16"
 
   # eks
-  eks_name              = "karpenter-cls"
+  eks_name              = "ticketing-cluster"
   eks_version           = "1.32"
-  eks_node_min_size     = 1
+  eks_node_min_size     = 2
   eks_node_max_size     = 3
-  eks_node_desired_size = 1
+  eks_node_desired_size = 2
 
   # karpenter
   karpenter_namespace = "karpenter"

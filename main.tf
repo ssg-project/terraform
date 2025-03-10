@@ -42,40 +42,6 @@ module "eks" {
 
   cluster_endpoint_public_access  = true
   cluster_endpoint_private_access = true
-  # cluster_addons = {
-  #   coredns = {
-  #     resolve_conflicts = "OVERWRITE"
-  #     configuration_values = jsonencode({
-  #       tolerations = [
-  #         # Allow CoreDNS to run on the same nodes as the Karpenter controller
-  #         # for use during cluster creation when Karpenter nodes do not yet exist
-  #         {
-  #           key    = "karpenter.sh/controller"
-  #           value  = "true"
-  #           effect = "NoSchedule"
-  #         }
-  #       ]
-  #     })
-  #   }
-  #   vpc-cni = {
-  #     resolve_conflicts = "OVERWRITE"
-  #     configuration_values = jsonencode({
-  #       enableNetworkPolicy = "true"
-  #       env = {
-  #         ENABLE_PREFIX_DELEGATION = "true"
-  #         WARM_ENI_TARGET          = "1"
-  #         MINIMUM_IP_TARGET        = "10"
-  #       }
-  #     })
-  #   }
-  #   aws-ebs-csi-driver = {
-  #     most_recent              = true
-  #     service_account_role_arn = aws_iam_role.ebs_csi.arn
-  #   }
-  #   metrics-server         = { resolve_conflicts = "OVERWRITE" }
-  #   eks-pod-identity-agent = {}
-  #   kube-proxy             = {}
-  # }
 
   enable_cluster_creator_admin_permissions = true
 
@@ -84,8 +50,7 @@ module "eks" {
 
   eks_managed_node_groups = {
     karpenter = {
-      ami_type = "BOTTLEROCKET_x86_64"
-      # instance_types = ["m5.large"]
+      ami_type = "AL2023_x86_64_STANDARD"
       instance_types = ["t3.medium"]
 
       min_size     = local.eks_node_min_size
@@ -229,8 +194,6 @@ module "eks_blueprints_addons" {
       })
     }
   }
-
-  enable_aws_load_balancer_controller = true
 }
 
 module "ebs_csi_driver_irsa" {

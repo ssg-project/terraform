@@ -5,16 +5,16 @@ metadata:
   name: default
 spec:
   amiSelectorTerms:
-    - alias: bottlerocket@latest
-  role: karpenter-cls # 수정
+    - alias: al2023@latest
+  role: ticketing-cluster # 수정
   subnetSelectorTerms:
     - tags:
-        karpenter.sh/discovery: karpenter-cls # 수정
+        karpenter.sh/discovery: ticketing-cluster # 수정
   securityGroupSelectorTerms:
     - tags:
-        karpenter.sh/discovery: karpenter-cls # 수정
+        karpenter.sh/discovery: ticketing-cluster # 수정
   tags:
-    karpenter.sh/discovery: karpenter-cls # 수정
+    karpenter.sh/discovery: ticketing-cluster # 수정
 ---
 apiVersion: karpenter.sh/v1
 kind: NodePool
@@ -40,6 +40,10 @@ spec:
         - key: "karpenter.k8s.aws/instance-generation"
           operator: Gt
           values: ["2"]
+        - key: "kubernetes.io/arch"
+          operator: In
+          values: ["amd64"]
+
   limits:
     cpu: 1000
   disruption:
