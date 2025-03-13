@@ -50,7 +50,7 @@ module "eks" {
 
   eks_managed_node_groups = {
     karpenter = {
-      ami_type = "AL2023_x86_64_STANDARD"
+      ami_type       = "AL2023_x86_64_STANDARD"
       instance_types = ["t3.medium"]
 
       min_size     = local.eks_node_min_size
@@ -167,33 +167,37 @@ module "eks_blueprints_addons" {
           ]
         }
     }) }
-    metrics-server = {
-      most_recent       = true
-      resolve_conflicts = "OVERWRITE" # 기존 설정 덮어쓰기
-      configuration_values = jsonencode({
-        replicas = 2,
-        tolerations = [
-          {
-            key      = "CriticalAddonsOnly",
-            operator = "Exists",
-            effect   = "NoSchedule"
-          },
-          {
-            key : "karpenter.sh/controller",
-            operator : "Exists",
-            effect : "NoSchedule"
-          }
-        ],
-        resources = {
-          requests = { cpu : "100m", memory : "128Mi" },
-          limits : { cpu : "200m", memory : "256Mi" }
-        },
-        # podDisruptionBudget : { enabled : true, maxUnavailable : 1 },
-        # nodeSelector : { kubernetes.io / os : "linux" },
-        # affinity : null # 특정 노드 배치를 위한 affinity 설정 가능
-      })
-    }
   }
+
+  enable_metrics_server = true
+
+  metrics_server = {
+    most_recent       = true
+    resolve_conflicts = "OVERWRITE" # 기존 설정 덮어쓰기
+    configuration_values = jsonencode({
+      replicas = 2,
+      tolerations = [
+        {
+          key      = "CriticalAddonsOnly",
+          operator = "Exists",
+          effect   = "NoSchedule"
+        },
+        {
+          key      = "karpenter.sh/controller",
+          operator = "Exists",
+          effect   = "NoSchedule"
+        }
+      ],
+      resources = {
+        requests = { cpu : "100m", memory : "128Mi" },
+        limits : { cpu : "200m", memory : "256Mi" }
+      },
+      # podDisruptionBudget : { enabled : true, maxUnavailable : 1 },
+      # nodeSelector : { "kubernetes.io/os" : "linux" },
+      # affinity : null # 특정 노드 배치를 위한 affinity 설정 가능
+    })
+  }
+
 }
 
 module "ebs_csi_driver_irsa" {
@@ -213,6 +217,8 @@ module "ebs_csi_driver_irsa" {
 
   tags = local.tags
 }
+
+
 
 ################################################################################
 # Karpenter
